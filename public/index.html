@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html ng-app="Rsa">
+<head>
+    <meta charset="UTF-8">
+    <title>RSA</title>
+
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/big-integer/BigInteger.min.js"></script>
+    <script src="bower_components/convert-hex.js"></script>
+    <script src="helpers/rsa-biginteger.js"></script>
+    <script src="helpers/rsa-complement.js"></script>
+    <script src="bower_components/crypto-js/crypto-js.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="controllers/user.js"></script>
+</head>
+<body ng-controller="User" data-ng-init="init()">
+PELELELE...!
+
+<button ng-click="rsa()">RSA </button>
+<button ng-click="blindSign()">Blind signature</button>
+<button ng-click="nonRepudiation()">No repudio</button>
+</body>
+
+</html>

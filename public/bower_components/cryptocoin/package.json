@@ -1,0 +1,38 @@
+{
+  "name": "cryptocoin",
+  "version": "0.3.0",
+  "description": "Crypto currency library for Bitcoin, Litecoin, etc.",
+  "main": "./lib/index.js",
+  "keywords": [
+    "bitcoin",
+    "litecoin",
+    "crypto",
+    "cryptocoin",
+    "cryptography",
+    "coin",
+    "currency",
+    "cryptocurrency",
+    "namecoin"
+  ],
+  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cryptocoinjs/cryptocoin"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "browserify": "~2.36.1",
+    "uglifyjs": "~2.3.6"
+  },
+  "dependencies": {
+    "sha256": "0.1.x",
+    "convert-hex": "0.1.x",
+    "ripemd160": "0.1.x",
+    "btc-address": "0.2.x",
+    "eckey": "0.3.x",
+    "bigi": "0.2.x",
+    "bs58": "0.2.x",
+    "ecdsa": "~0.3.0",
+    "secure-random": "~0.1.0"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "cryptocoin",
+  "version": "0.3.0",
+  "description": "Crypto currency library for Bitcoin, Litecoin, etc.",
+  "keywords": [
+    "bitcoin",
+    "litecoin",
+    "crypto",
+    "cryptocoin",
+    "cryptography",
+    "coin",
+    "currency",
+    "cryptocurrency",
+    "namecoin"
+  ],
+  "repo": "https://github.com/cryptocoinjs/cryptocoin",
+  "main": "./dist/cryptocoin.js",
+  "homepage": "https://github.com/cryptocoinjs/cryptocoin",
+  "_release": "0.3.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.3.0",
+    "commit": "b5077f86340d02e7a9c15ed26fbcf663eb700893"
+  },
+  "_source": "https://github.com/cryptocoinjs/cryptocoin.git",
+  "_target": "^0.3.0",
+  "_originalSource": "cryptocoin"
+}

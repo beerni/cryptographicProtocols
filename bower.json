@@ -1,0 +1,23 @@
+{
+  "name": "public",
+  "authors": [
+    "Aitor Piñeyro <itor95@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "crypto-js": "^3.1.6",
+    "big-integer": "*",
+    "angular": "^1.5.8",
+    "cryptocoin": "^0.3.0"
+  }
+}
