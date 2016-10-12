@@ -2,14 +2,12 @@ var express = require('express');
 var router = express.Router();
 var CryptoJS = require("crypto-js");
 var bignum = require('bignum');
-var JSONbig = require('json-bigint');
 var rsa = require('./rsa');
-var keys = rsa.generateKeys(512);
-var http = require('http');
 var request = require("request");
 var clientSecret='clientSecret';
 var serverSecret='serverSecret';
 var C;
+var keys = rsa.generateKeys(512);
 router.get('/publickey', function (req, res) {
     res.status(200).send({
         bits: keys.publicKey.bits.toString(),
@@ -47,12 +45,17 @@ router.post('/nonRep', function (req, res) {
 });
 router.post('/publicationProof', function (req, res) {
     var K = req.body.K;
-    console.log(K);
-    console.log(C);
     var bytes  = CryptoJS.AES.decrypt(C, K);
     var plaintext = bytes.toString(CryptoJS.enc.Utf8);
     console.log(plaintext);
-    res.status(200).send('HOLA');
+    res.status(200).send('OK');
 
+});
+
+router.get('/token', function (req, res) {
+    require('crypto').randomBytes(48, function(err, buffer) {
+        var token = buffer.toString('hex');
+        res.status(200).send({token:token});
+    });
 });
 module.exports = router;

@@ -20,9 +20,9 @@ function hex2a(hexx) {
 angular.module('Rsa', []).controller('User', ['$http', '$scope', function ($http, $scope) {
     var clientSecret = 'clientSecret';
     var serverSecret = 'serverSecret';
-    var url = "http://localhost:8080";
+    var url = "https://localhost:8080";
     var keyPair;
-    var d,n,e;
+    var d, n, e;
     var keys = {
         publicKey: ""
     };
@@ -41,9 +41,9 @@ angular.module('Rsa', []).controller('User', ['$http', '$scope', function ($http
     };
     $scope.init = function () {
         keyPair = rsaInt.generateKeys(512);
-        e=keyPair.publicKey.e;
-        n=keyPair.publicKey.n;
-        d=keyPair.privateKey.d;
+        e = keyPair.publicKey.e;
+        n = keyPair.publicKey.n;
+        d = keyPair.privateKey.d;
     };
     var signMsg = 'Mensaje cegado';
     $scope.blindSign = function () {
@@ -59,11 +59,24 @@ angular.module('Rsa', []).controller('User', ['$http', '$scope', function ($http
             //msgSign=msgBlinded.toString(16);
             $http.post(url + '/blindSign', {data: msgBlinded}).success(function (res) {
                 var msgSigned = bigInt(res.data, 16);
-                console.log(bigInt(res.data,16));
+                console.log(bigInt(res.data, 16));
                 var unblind = (msgSigned.multiply(rand.modInv(n))).mod(n);
                 var decryptMsg = unblind.modPow(e, n).toString(16);
                 console.log(hex2a(decryptMsg));
             })
+        });
+    };
+    var token;
+    var username = "bernatmir";
+    var password = "1234";
+    var g0 = 5;
+    var g1 = 10;
+    $scope.zkp = function () {
+        $http.get(url + '/token').success(function (response) {
+            token = bigInt(response.token,16);
+            var x = CryptoJS.MD5(password).toString(CryptoJS.enc.Hex);
+            var y = bigInt(g0).modPow(bigInt(x,16),g1);
+            console.log(y);
         });
     };
     $scope.nonRepudiation = function () {
@@ -74,7 +87,7 @@ angular.module('Rsa', []).controller('User', ['$http', '$scope', function ($http
         console.log(C);
         var originProbe = A + '|' + B + '|' + C;
         var originProbeHash = CryptoJS.SHA256(originProbe).toString(CryptoJS.enc.Hex);
-        originProbe= bigInt(originProbeHash,16).modPow(d,n).toString(16);
+        originProbe = bigInt(originProbeHash, 16).modPow(d, n).toString(16);
         var data = {
             A: 'Alice',
             B: 'Bob',
@@ -83,22 +96,22 @@ angular.module('Rsa', []).controller('User', ['$http', '$scope', function ($http
         };
 
         $http.post(url + '/nonRep', {data: data}).success(function (res) {
-            var A='Alice';
-            var B='Bob';
-            var TTP='TTP';
-            var K =clientSecret;
-            var concat = A+'|'+TTP+'|'+B+'|'+K;
-            var hash= CryptoJS.SHA256(concat).toString(CryptoJS.enc.Hex);
-            var originProof = bigInt(hash,16).modPow(d,n).toString(16);
-            var data ={
-                A:A,
-                TTP:TTP,
-                B:B,
-                K:K,
-                originProof:originProof
+            var A = 'Alice';
+            var B = 'Bob';
+            var TTP = 'TTP';
+            var K = clientSecret;
+            var concat = A + '|' + TTP + '|' + B + '|' + K;
+            var hash = CryptoJS.SHA256(concat).toString(CryptoJS.enc.Hex);
+            var originProof = bigInt(hash, 16).modPow(d, n).toString(16);
+            var data = {
+                A: A,
+                TTP: TTP,
+                B: B,
+                K: K,
+                originProof: originProof
 
             };
-            $http.post('http://localhost:8085/ttp', {data:data}).success(function (res) {
+            $http.post('https://localhost:8085/ttp', {data: data}).success(function (res) {
                 console.log('ok');
             })
         })

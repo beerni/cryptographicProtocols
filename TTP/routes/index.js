@@ -9,15 +9,8 @@ var keys = rsa.generateKeys(512);
 var http = require('http');
 var bignum = require('bignum');
 var request = require('request');
-
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 router.post('/ttp', function (req, res) {
-    /*request({
-        uri: "http://localhost:8085",
-        method: "GET",
-        form: data
-    }, function(error, response, body) {
-        console.log(body);
-    });*/
     var A='Alice';
     var B = 'Bob';
     var K=req.body.data.K;
@@ -35,11 +28,11 @@ router.post('/ttp', function (req, res) {
     console.log(req.body);
     res.status(200).send({data:data});
     request({
-        uri: "http://localhost:8080/publicationProof",
+        uri: "https://localhost:8080/publicationProof",
         method: "POST",
         form: data
     }, function(error, response, body) {
-        console.log(body);
+        console.log(error);
     });
 });
 

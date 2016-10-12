@@ -8,6 +8,8 @@ var logger = require('morgan');
 var routes = require('./routes/index');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var fs = require('fs');
+var https = require('https');
 
 
 var app = express();
@@ -32,12 +34,20 @@ app.use(function(req, res, next) {
 });
 
 
+var options = {
+    key: fs.readFileSync('ttp-key.pem'),
+    cert: fs.readFileSync('ttp-cert.pem')
+};
 
+
+https.createServer(options, app).listen(8085, function () {
+    console.log('Started!');
+});
 module.exports = app;
 
-var server = require('http').Server(app);
+/*var server = require('http').Server(app);
 
 // Start server
 server.listen(8085, function() {
     console.log("TTP running on http://localhost:8085");
-});
+});*/
