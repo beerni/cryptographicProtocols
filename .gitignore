@@ -31,10 +31,12 @@ build/Release
 # Dependency directories
 node_modules
 jspm_packages
+public/bower_components
 
 # Optional npm cache directory
 .npm
 
+TTP/node_modules
 # Optional REPL history
 .node_repl_history
 
