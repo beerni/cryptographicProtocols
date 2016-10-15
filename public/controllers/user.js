@@ -73,9 +73,9 @@ angular.module('Rsa', []).controller('User', ['$http', '$scope', function ($http
     var g1 = 10;
     $scope.zkp = function () {
         $http.get(url + '/token').success(function (response) {
-            token = bigInt(response.token,16);
+            token = bigInt(response.token, 16);
             var x = CryptoJS.MD5(password).toString(CryptoJS.enc.Hex);
-            var y = bigInt(g0).modPow(bigInt(x,16),g1);
+            var y = bigInt(g0).modPow(bigInt(x, 16), g1);
             console.log(y);
         });
     };
@@ -117,6 +117,30 @@ angular.module('Rsa', []).controller('User', ['$http', '$scope', function ($http
         })
 
 
+    };
+
+    $scope.paillier = function () {
+
+        $http.get(url + '/paillierKeys').success(function (response) {
+            var msg = '2';
+            var msg2 = '4';
+            var n = bigInt(response.n);
+            var g = bigInt(response.g);
+            var r1 = bigInt.randBetween(bigInt(0), n);
+            var r2 = bigInt.randBetween(bigInt(0), n);
+            var c1 = g.modPow(bigInt(msg.toString(16)), n.pow(2)).multiply(r1.modPow(n, n.pow(2))).mod(n.pow(2)).toString(16);
+            var c2 = g.modPow(bigInt(msg2.toString(16)), n.pow(2)).multiply(r2.modPow(n, n.pow(2))).mod(n.pow(2)).toString(16);
+            $http.post(url + '/paillierCipher', {
+                c1: c1,
+                c2: c2
+            }).success(function (res) {
+                console.log('ok');
+            })
+        });
+    };
+
+    function Lagrange(u) {
+        return (u.subtract(1)).divide(512);
     }
 
 }]);

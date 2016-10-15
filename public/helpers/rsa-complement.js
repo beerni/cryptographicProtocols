@@ -1,6 +1,8 @@
 /**
  * Created by bernatmir on 2/10/16.
  */
+
+
 bigInt.prime = function (bitLength) {
     var rnd = bigInt.zero;
     var isPrime = false;

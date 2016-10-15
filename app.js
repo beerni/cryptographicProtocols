@@ -39,18 +39,3 @@ var options = {
 https.createServer(options, app).listen(8080, function () {
     console.log('Started!');
 });
-/*https.createServer(options, function (req, res) {
-    res.writeHead(200);
-    res.pipe(req);
-}).listen(8080);/*
-
-module.exports = app;
-
-
-/*var server = require('http').Server(app);
-
- // Start server
- server.listen(8080, function () {
- console.log("Node server running on http://localhost:8080");
- });
- */
