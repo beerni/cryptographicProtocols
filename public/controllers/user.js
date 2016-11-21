@@ -71,13 +71,31 @@ angular.module('Rsa', []).controller('User', ['$http', '$scope', function ($http
     var password = "1234";
     var g0 = 5;
     var g1 = 10;
-    $scope.zkp = function () {
-        $http.get(url + '/token').success(function (response) {
-            token = bigInt(response.token, 16);
-            var x = CryptoJS.MD5(password).toString(CryptoJS.enc.Hex);
-            var y = bigInt(g0).modPow(bigInt(x, 16), g1);
-            console.log(y);
-        });
+    $scope.Threshold = function () {
+        // var key = secrets.random(512);
+        var secret = 'El aitor va cojo';
+        // convert the text into a hex string
+        var secretHex = secrets.str2hex(secret); // => hex string
+
+        console.log('Split into 5 shares, with a threshold of 3');
+        var sharedsecret = secrets.share(secretHex, 5, 3);
+
+        console.log('The 5 shares:');
+        console.log(sharedsecret[0]);
+        console.log(sharedsecret[1]);
+        console.log(sharedsecret[2]);
+        console.log(sharedsecret[3]);
+        console.log(sharedsecret[4]);
+
+        console.log('Combining 3 of them....');
+        // combine 3 shares:
+        var comb = secrets.combine([sharedsecret[1], sharedsecret[3], sharedsecret[4]]);
+
+        //convert back to UTF string:
+        var combString = secrets.hex2str(comb);
+        console.log('SECRET: <<<<<<<<<<< ' + combString + ' >>>>>>>>>>');
+
+
     };
     $scope.nonRepudiation = function () {
 
@@ -122,8 +140,8 @@ angular.module('Rsa', []).controller('User', ['$http', '$scope', function ($http
     $scope.paillier = function () {
 
         $http.get(url + '/paillierKeys').success(function (response) {
-            var msg = '2';
-            var msg2 = '4';
+            var msg = '100';
+            var msg2 = '102';
             var n = bigInt(response.n);
             var g = bigInt(response.g);
             var r1 = bigInt.randBetween(bigInt(0), n);
