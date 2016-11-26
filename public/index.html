@@ -1,27 +1,50 @@
 <!DOCTYPE html>
-<html ng-app="Rsa">
+<html lang="en" ng-app="modulosCities">
+
 <head>
-    <meta charset="UTF-8">
-    <title>CITIES 2</title>
+    <meta charset="utf-8">
+    <title>Note Wrangler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="index.css">
+    <!-- Load Js libs -->
 
-    <script src="bower_components/angular/angular.min.js"></script>
-    <script src="bower_components/big-integer/BigInteger.min.js"></script>
-    <script src="bower_components/convert-hex.js"></script>
-    <script src="helpers/rsa-biginteger.js"></script>
-    <script src="helpers/rsa-complement.js"></script>
-    <script src="helpers/shared-secret.js"></script>
-    <script src="bower_components/crypto-js/crypto-js.js"></script>
-    <script src="bower_components/underscore/underscore.js"></script>
-    <script src="controllers/user.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="javascript/routes.js"></script>
+    <script src="./controllers/all_in_one.js"></script>
+    <script src="controllers/navbarController.js"></script>
+
+    <!-- Controllers -->
+
 </head>
-<body ng-controller="User" data-ng-init="init()">
-PELELELE...!
 
-<button ng-click="rsa()">RSA </button>
-<button ng-click="blindSign()">Blind signature</button>
-<button ng-click="nonRepudiation()">No repudio</button>
-<button ng-click="Threshold()">Threshold</button>
-<button ng-click="paillier()">Paillier </button>
+<body>
+
+<nav ng-controller="NavbarController" class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" ng-click="init()" href="#/" >Modulos Cities</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul ng-click="navbarClick()" class="nav navbar-nav">
+                <li><a href="#/rsa">RSA</a></li>
+                <li><a href="#/blind">Blind signature</a></li>
+                <li><a href="#/repudiation">Non repudiation</a></li>
+                <li><a href="#/paillier">Paillier</a></li>
+                <li><a href="#/threshol">Secret threshold</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<img src="http://www.snopes.com/wordpress/wp-content/uploads/2016/02/the-new-yorker-who-is-donald-trump.jpeg" id="bg" alt="">
+
+
+    <div ng-view></div>
+
 </body>
-
 </html>
