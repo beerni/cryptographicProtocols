@@ -1,0 +1,20 @@
+<div class="container">
+    <h2>RSA MODULE</h2>
+    <p>Introduce the message</p>
+    <form>
+        <div class="form-group">
+            <label >Message to blind:</label>
+            <input type="text" class="form-control" ng-model="message.blind">
+            <br>
+            <button ng-click="blindMessage()">Send</button>
+        </div>
+
+        <div ng id="blinded" style="display: none">
+            <label >Random number {{message.random}}</label>
+            <label> Message blinded {{message.blinded}}</label>
+            <label >Message unblinded: {{message.unblinded}}</label>
+            <br>
+            <img src="https://media.giphy.com/media/d2Z9QYzA2aidiWn6/giphy.gif">
+        </div>
+    </form>
+</div>

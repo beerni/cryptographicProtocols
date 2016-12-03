@@ -40,8 +40,9 @@ router.post('/encrypt', function (req, res) {
 });
 
 router.post('/blindSign', function (req, res) {
-    var msgUnblinded = keys.privateKey.sign(bignum(req.body.data, 16));
-    res.status(200).send({data: msgUnblinded.toString(16)});
+    var blindMessageSigned = keys.privateKey.sign(bignum(req.body.data, 16));
+    console.log('Message signed: '+ blindMessageSigned);
+    res.status(200).send({data: blindMessageSigned.toString(16)});
 });
 router.post('/nonRep', function (req, res) {
     var B = 'Bob';

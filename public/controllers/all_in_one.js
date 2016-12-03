@@ -52,7 +52,33 @@ angular.module('modulosCities').controller('RsaController', ['$http', '$scope', 
 ;
 
 angular.module('modulosCities').controller('BlindController', ['$http', '$scope', function ($http, $scope) {
-    console.log('Inside Blind controller ');
+    $scope.message = {};
+    var keys = {
+        publicKey: ""
+    };
+   $scope.blindMessage = function () {
+       console.log('blind');
+       var n, e;
+       var rand;
+       $http.get(url + '/publickey').success(function (response) {
+           document.getElementById("blinded").style.display = "inline";
+           keys.publicKey = response;
+           n = keys.publicKey.n;
+           e = keys.publicKey.e;
+           rand = bigInt.randBetween(2, n - 1);
+           $scope.message.random = rand.value;
+           var msgEnc = bigInt(convertToHex($scope.message.blind), 16);
+           var msgBlinded = (msgEnc.multiply(rand.modPow(e, n))).mod(n).toString(16);
+           $scope.message.blinded= msgBlinded;
+           $http.post(url + '/blindSign', {data: msgBlinded}).success(function (res) {
+               var msgSigned = bigInt(res.data, 16);
+               console.log(bigInt(res.data, 16));
+               var unblind = (msgSigned.multiply(rand.modInv(n))).mod(n);
+               var decryptMsg = unblind.modPow(e, n).toString(16);
+               $scope.message.unblinded = hex2a(decryptMsg);
+           })
+       });
+   }
 }]);
 angular.module('modulosCities').controller('RepudiationController', ['$http', '$scope', function ($http, $scope) {
     console.log('Inside Repudiation controller ');
