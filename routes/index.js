@@ -56,6 +56,7 @@ router.post('/nonRep', function (req, res) {
         A: A,
         receptionProbe: receptionProbe
     };
+    console.log(data);
     res.status(200).send({data: data});
 
 });
@@ -64,6 +65,11 @@ router.post('/publicationProof', function (req, res) {
     var bytes = CryptoJS.AES.decrypt(C, K);
     var plaintext = bytes.toString(CryptoJS.enc.Utf8);
     console.log(plaintext);
+    console.log("++++++++++++++++++++++++++++++++++++");
+    console.log('+                                  +');
+    console.log('+        '+plaintext+'        ');
+    console.log('+                                  +');
+    console.log("++++++++++++++++++++++++++++++++++++");
     res.status(200).send('OK');
 
 });

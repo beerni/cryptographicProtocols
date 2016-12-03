@@ -1,0 +1,22 @@
+<div class="container">
+    <h2>Blind module</h2>
+    <p>Introduce the secret</p>
+    <form>
+        <div class="form-group">
+            <label >Secret </label>
+            <input type="text" class="form-control" ng-model="message.secret">
+            <br>
+            <label >Message </label>
+            <input type="text" class="form-control" ng-model="message.msg">
+            <br>
+            <button ng-click="nonRepudiation()">Send</button>
+        </div>
+
+        <div ng id="nonRepudiation" style="display: none">
+            <label >Proof of origin {{message.proofOrigin}}</label>
+            <label> Crypted message {{message.crypted}}</label>
+            <br>
+            <img src="https://media.giphy.com/media/d2Z9QYzA2aidiWn6/giphy.gif">
+        </div>
+    </form>
+</div>
