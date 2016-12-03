@@ -4,9 +4,11 @@ var CryptoJS = require("crypto-js");
 var bignum = require('bignum');
 var rsa = require('./rsa');
 var paillier = require('./paillier');
+var secrets = require('secrets.js');
 var request = require("request");
 var clientSecret = 'clientSecret';
 var serverSecret = 'serverSecret';
+var sevrets = require('./')
 var C;
 var keys = rsa.generateKeys(512);
 var paillierKeys;
@@ -102,5 +104,27 @@ router.post('/paillierCipher', function (req, res) {
     console.log('************');
     res.status(200).send('OK');
 
+});
+router.post('/msgShare', function (req, res) {
+
+    //Combinamos las 3 claves compartidas, para obtener el mensaje.
+    var comb = secrets.combine([req.body.share1, req.body.share2, req.body.share3]);
+
+    //Para obtener el mensaje tal cual lo teniamos, deberemos pasarlo de hex a string.
+    comb = secrets.hex2str(comb);
+
+    console.log(comb);
+
+    return res.json(comb);
+
+});
+router.post('/getShare',function (req,res) {
+    //Convertimos el texto en un hexstring
+    var txthex = secrets.str2hex(req.body.data);
+    //Dividimos en 5 claves compartidas, con un threshold de 3
+    var shares = secrets.share(txthex, 5, 3);
+    console.log(shares);
+
+    return res.json(shares);
 });
 module.exports = router;

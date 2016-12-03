@@ -130,6 +130,30 @@ angular.module('modulosCities').controller('RepudiationController', ['$http', '$
 }]);
 angular.module('modulosCities').controller('ThresholdController', ['$http', '$scope', function ($http, $scope) {
     console.log('Inside threshold controller ');
+    $scope.txt = "";
+    $scope.share1 = "";
+    $scope.share2 = "";
+    $scope.share3 = "";
+
+    $scope.message={};
+
+
+
+    $scope.getShare=function () {
+        $http.post("https://localhost:8080/getShare", {data: $scope.txt}
+        ).success(function (data) {
+            console.log(data);
+            console.log(data[0]);
+            $scope.message.share1 = 'jdiejd';
+
+        })
+    }
+    $scope.msgShare=function () {
+        $http.post("https://localhost:8080/msgShare", {share1: $scope.share1, share2: $scope.share2, share3: $scope.share3}
+        ).success(function (data) {
+            console.log(data);
+        })
+    }
 }]);
 angular.module('modulosCities').controller('PaillierController', ['$http', '$scope', function ($http, $scope) {
     $scope.message = {};
