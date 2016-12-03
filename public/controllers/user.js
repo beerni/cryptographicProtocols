@@ -66,11 +66,6 @@ angular.module('Rsa', []).controller('User', ['$http', '$scope', function ($http
             })
         });
     };
-    var token;
-    var username = "bernatmir";
-    var password = "1234";
-    var g0 = 5;
-    var g1 = 10;
     $scope.Threshold = function () {
         // var key = secrets.random(512);
         var secret = 'El aitor va cojo';

@@ -1,1 +1,24 @@
-<h1>PELELE</h1>
+<div class="container">
+    <h2>RSA MODULE</h2>
+    <p>Introduce the message</p>
+    <form>
+        <div class="form-group">
+            <label >Message:</label>
+            <input type="text" class="form-control" ng-model="message.unencrypted">
+            <br>
+            <button ng-click="rsa()">Send</button>
+        </div>
+
+        <div ng id="rsaLogic" style="display: none">
+            <label >Public key of the server. e=  {{message.publicKeyE}}</label>
+            <label> n={{message.publicKeyN}}</label>
+            <label >Message encrypted: {{message.encrypted}}</label>
+            <br>
+            <br>
+            <label >Message signed from server: {{message.signed}}</label>
+            <label >Message decrypted: {{message.decrypted}}</label>
+            <br>
+            <img src="https://media.giphy.com/media/d2Z9QYzA2aidiWn6/giphy.gif">
+        </div>
+    </form>
+</div>

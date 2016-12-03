@@ -28,8 +28,14 @@ router.post('/encrypt', function (req, res) {
     var msgSign = 'Hola soy el server';
     var msgDes = keys.privateKey.decrypt(bignum(req.body.data, 16));
     var msgDescod2 = msgDes.toBuffer().toString();
-    console.log('Message desencrypted = ' + msgDescod2);
+    console.log("++++++++++++++++++++++++++++++++++++");
+    console.log('+                                  +');
+    console.log('+        '+msgDescod2+'        ');
+    console.log('+                                  +');
+    console.log("++++++++++++++++++++++++++++++++++++");
     msgSign = keys.privateKey.sign(bignum.fromBuffer(new Buffer(msgSign)));
+    console.log('Firmando mensaje desde server con su privada : ' +msgSign);
+    console.log('Mensaje firmado : '+msgSign);
     res.status(200).send({data: msgSign.toString(16)});
 });
 
