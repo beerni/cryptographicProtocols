@@ -34,7 +34,6 @@ router.post('/encrypt', function (req, res) {
     console.log('+                                  +');
     console.log("++++++++++++++++++++++++++++++++++++");
     msgSign = keys.privateKey.sign(bignum.fromBuffer(new Buffer(msgSign)));
-    console.log('Firmando mensaje desde server con su privada : ' +msgSign);
     console.log('Mensaje firmado : '+msgSign);
     res.status(200).send({data: msgSign.toString(16)});
 });

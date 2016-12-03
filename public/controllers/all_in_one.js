@@ -132,6 +132,31 @@ angular.module('modulosCities').controller('ThresholdController', ['$http', '$sc
     console.log('Inside threshold controller ');
 }]);
 angular.module('modulosCities').controller('PaillierController', ['$http', '$scope', function ($http, $scope) {
-    console.log('Inside Paillier controller ');
+    $scope.message = {};
+    $scope.paillier = function () {
+        $http.get(url + '/paillierKeys').success(function (response) {
+            var msg = '100';
+            var msg2 = '102';
+            var n = bigInt(response.n);
+            var g = bigInt(response.g);
+            var r1 = bigInt.randBetween(bigInt(0), n);
+            var r2 = bigInt.randBetween(bigInt(0), n);
+            var c1 = g.modPow(bigInt(msg.toString(16)), n.pow(2)).multiply(r1.modPow(n, n.pow(2))).mod(n.pow(2)).toString(16);
+            var c2 = g.modPow(bigInt(msg2.toString(16)), n.pow(2)).multiply(r2.modPow(n, n.pow(2))).mod(n.pow(2)).toString(16);
+            $scope.message.random1 = r1;
+            $scope.message.random2 = r2;
+            $scope.message.cipher1 = c1;
+            $scope.message.cipher2 = c2;
+            document.getElementById("paillier").style.display = "inline";
+
+            $http.post(url + '/paillierCipher', {
+                c1: c1,
+                c2: c2
+            }).success(function (res) {
+                console.log('ok');
+            })
+        });
+    }
+
 }]);
 
