@@ -42,7 +42,7 @@ rsa.publicKey.prototype = {
     encrypt: function(m) {
         return m.powm(this.e, this.n);
     },
-    verify: function(c) {
+    decrypt: function (c) {
         return c.powm(this.e, this.n);
     }
 };
@@ -50,9 +50,6 @@ rsa.publicKey.prototype = {
 rsa.privateKey.prototype = {
     encrypt: function(m) {
         return m.powm(this.publicKey.e, this.publicKey.n);
-    },
-    verify: function(c) {
-        return c.powm(this.publicKey.e, this.publicKey.n);
     },
     sign: function(m) {
         return m.powm(this.d, this.publicKey.n);

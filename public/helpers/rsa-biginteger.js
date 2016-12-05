@@ -16,7 +16,6 @@ rsaInt = {
         this.publicKey = publicKey;
     },
     generateKeys: function(bitlength) {
-
         var p, q, n, phi, e, d, keys = {};
         this.bitlength = bitlength || 2048;
         console.log("Generating RSA keys of", this.bitlength, "bits");
@@ -49,6 +48,7 @@ rsaInt.publicKey.prototype = {
 
 rsaInt.privateKey.prototype = {
     encrypt: function(m) {
+        console.log(bigInt(m));
         return m.modPow(this.publicKey.e, this.publicKey.n);
     },
     verify: function(c) {

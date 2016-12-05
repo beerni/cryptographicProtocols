@@ -43,23 +43,12 @@ paillier = {
 
         lambda = lcm(p.sub(1), q.sub(1));
 
-
-
         alpha = bignum.rand(n);
         beta = bignum.rand(n);
 
-
-
         g = alpha.mul(n).add(1).mul(beta.powm(n, n.pow(2))).mod(n.pow(2));
 
-
-
         mu = L(g.powm(lambda, n.pow(2)), n).invertm(n);
-
-
-
-        e = bignum(65537);
-        d = e.invertm(phi);
 
         keys.publicKey = new paillier.publicKey(this.bitlength, n, g);
         keys.privateKey = new paillier.privateKey(lambda, mu, p, q, keys.publicKey);
@@ -72,7 +61,6 @@ paillier = {
 
 paillier.publicKey.prototype = {
     encrypt: function (m) {
-
         var r = bignum.rand(this.n);
         var c = (this.g.powm(m, this.n.pow(2)).mul(r.powm(this.n, this.n.pow(2))).mod(this.n.pow(2)));
         return {
@@ -84,10 +72,7 @@ paillier.publicKey.prototype = {
 
 paillier.privateKey.prototype = {
     decrypt: function (c) {
-
         return L(c.powm(this.lambda, this.publicKey.n.pow(2)), this.publicKey.n).mul(this.mu).mod(this.publicKey.n);
-
-
     }
 };
 

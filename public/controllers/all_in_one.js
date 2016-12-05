@@ -81,50 +81,97 @@ angular.module('modulosCities').controller('BlindController', ['$http', '$scope'
     }
 }]);
 angular.module('modulosCities').controller('RepudiationController', ['$http', '$scope', function ($http, $scope) {
-    var clientSecret = 'clientSecret';
     var keyPair;
     $scope.nonRepudiation = function () {
         document.getElementById("nonRepudiation").style.display = "inline";
         keyPair = rsaInt.generateKeys(512);
-        e = keyPair.publicKey.e;
-        n = keyPair.publicKey.n;
-        d = keyPair.privateKey.d;
+        var e = keyPair.publicKey.e;
+        var n = keyPair.publicKey.n;
+        var d = keyPair.privateKey.d;
         var A = 'Alice';
         var B = 'Bob';
-        var C = CryptoJS.AES.encrypt($scope.message.msg, clientSecret).toString();
-        console.log(C);
+        var C = CryptoJS.AES.encrypt($scope.message.msg, $scope.message.secret);
         var originProbe = A + '|' + B + '|' + C;
-        var originProbeHash = CryptoJS.SHA256(originProbe).toString(CryptoJS.enc.Hex);
-        originProbe = bigInt(originProbeHash, 16).modPow(d, n).toString(16);
+        var originProbeHash = CryptoJS.SHA256(originProbe);
+        originProbeHash= bigInt(originProbeHash.toString(),16);
+        originProbe = originProbeHash.modPow(d,n);
+        var uncrypted = originProbe.modPow(e,n);
+
         var data = {
             A: 'Alice',
             B: 'Bob',
-            C: C,
-            originProbe: originProbe
+            C: C.toString(),
+            originProbe: originProbe.toString(),
+            eClient:e.toString(),
+            nClient:n.toString()
+
         };
-
+        console.log(data);
         $scope.message.proofOrigin = originProbe;
-        $scope.message.crypted = C;
+        $scope.message.crypted = C.toString();
         $http.post(url + '/nonRep', {data: data}).success(function (res) {
-            var A = 'Alice';
-            var B = 'Bob';
-            var TTP = 'TTP';
-            var K = clientSecret;
-            var concat = A + '|' + TTP + '|' + B + '|' + K;
-            var hash = CryptoJS.SHA256(concat).toString(CryptoJS.enc.Hex);
-            var originProof = bigInt(hash, 16).modPow(d, n).toString(16);
-            var data = {
-                A: A,
-                TTP: TTP,
-                B: B,
-                K: K,
-                originProof: originProof
+            compareHash(res.data, function () {
+                var A = 'Alice';
+                var B = 'Bob';
+                var TTP = 'TTP';
+                var K = $scope.message.secret;
+                var concat = A + '|' + TTP + '|' + B + '|' + K;
+                var hash = CryptoJS.SHA256(concat);
+                hash = bigInt(hash.toString(),16);
+                var originProofOfK = hash.modPow(d,n);
+                var data = {
+                    A: A,
+                    TTP: TTP,
+                    B: B,
+                    K: K,
+                    originProofOfK: originProofOfK.toString(),
+                    eClient:e.toString(),
+                    nClient:n.toString()
 
-            };
-            $http.post('https://localhost:8085/ttp', {data: data}).success(function (res) {
-                console.log('ok');
+                };
+                $http.post('https://localhost:8085/ttp', {data: data}).success(function (res) {
+                    console.log('response from TTP');
+                    console.log(res.data);
+                    compareHashTTP(res.data, function () {
+
+                    })
+                })
+            });
             })
-        });
+    }
+
+    function compareHash(info, cb) {
+        console.log('Comparing hashes');
+        var concat = info.B + '|' + info.A + '|' + info.C;
+        var eS = bigInt(info.eServer);
+        var nS= bigInt(info.nServer);
+        var originHash = CryptoJS.SHA256(concat).toString();
+        var originServer = bigInt(info.receptionProbe);
+        var decrypted = originServer.modPow(eS,nS).toString(16);
+        if(decrypted.localeCompare(originHash)==0){
+            console.log('Equal hashes from proof of reception!');
+            console.log(decrypted.toString(16));
+            console.log(originHash.toString(16));
+            cb();
+        }
+        else
+            console.log('mismatch');
+    }
+    function compareHashTTP(info, cb) {
+        var concat = info.TTP + '|' + info.A + '|' + info.B+ '|' + info.K;
+        var eTTP = bigInt(info.eTTP);
+        var nTTP= bigInt(info.nTTP);
+        var originHash = CryptoJS.SHA256(concat).toString();
+        var originServer = bigInt(info.proofPublication);
+        var decrypted = originServer.modPow(eTTP,nTTP).toString(16);
+        if(decrypted.localeCompare(originHash)==0){
+            console.log('Equal hashes from proof of publication of K!');
+            console.log(decrypted.toString(16));
+            console.log(originHash.toString(16));
+            cb();
+        }
+        else
+            console.log('mismatch');
     }
 
 }]);
@@ -143,8 +190,6 @@ angular.module('modulosCities').controller('ThresholdController', ['$http', '$sc
         $http.post("https://localhost:8080/getShare", {data: $scope.txt}
         ).success(function (data) {
             console.log(data);
-            console.log(data[0]);
-            $scope.message.share1 = 'jdiejd';
 
         })
     }
@@ -157,22 +202,27 @@ angular.module('modulosCities').controller('ThresholdController', ['$http', '$sc
 }]);
 angular.module('modulosCities').controller('PaillierController', ['$http', '$scope', function ($http, $scope) {
     $scope.message = {};
+    $scope.num1 = "";
+    $scope.num2 = "";
     $scope.paillier = function () {
         $http.get(url + '/paillierKeys').success(function (response) {
-            var msg = '100';
-            var msg2 = '102';
+            var msg = $scope.num1; // convertir
+            var msg2 = $scope.num2;
+            var negative = false;
             var n = bigInt(response.n);
+            var n2 = n.pow(2);
             var g = bigInt(response.g);
             var r1 = bigInt.randBetween(bigInt(0), n);
             var r2 = bigInt.randBetween(bigInt(0), n);
-            var c1 = g.modPow(bigInt(msg.toString(16)), n.pow(2)).multiply(r1.modPow(n, n.pow(2))).mod(n.pow(2)).toString(16);
-            var c2 = g.modPow(bigInt(msg2.toString(16)), n.pow(2)).multiply(r2.modPow(n, n.pow(2))).mod(n.pow(2)).toString(16);
+            var bi1 = (bigInt(msg).mod(n).gt(0)) ? bigInt(msg).mod(n) : bigInt(msg).mod(n).add(n);
+            var bi2 = (bigInt(msg2).mod(n).gt(0)) ? bigInt(msg2).mod(n) : bigInt(msg2).mod(n).add(n) ;
+            var c1 = g.modPow(bi1, n2).multiply(r1.modPow(n, n2)).mod(n2).toString(16);
+            var c2 = g.modPow(bi2, n2).multiply(r2.modPow(n, n2)).mod(n2).toString(16);
             $scope.message.random1 = r1;
             $scope.message.random2 = r2;
             $scope.message.cipher1 = c1;
             $scope.message.cipher2 = c2;
             document.getElementById("paillier").style.display = "inline";
-
             $http.post(url + '/paillierCipher', {
                 c1: c1,
                 c2: c2
